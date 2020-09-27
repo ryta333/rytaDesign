@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
-const MouseTracker: React.FC = () => {
+// 自定义 hooks 
+const useMousePositions = () => {
   const [positions, setPositions] = useState({ x: 0, y: 0 })
   useEffect(() => {
     console.log('add effect', positions.x)
     const updateMouse = (e: MouseEvent) => {
-      console.log('inner')
       setPositions({ x: e.clientX, y: e.clientY })
     }
     // 每次点击会添加一次, 因此点击调用的次数不是线性增加
-    document.addEventListener('click', updateMouse)
+    document.addEventListener('mousemove', updateMouse)
     return () => {
       console.log('remove effect', positions.x)
-      document.removeEventListener('click', updateMouse)
+      document.removeEventListener('mousemove', updateMouse)
     }
-  })
-  console.log('before render', positions.x)
-  return (
-    <p>
-      X: {positions.x}, Y: {positions.y}
-    </p>
-  )
+  }, [])
+  return positions
 }
 
-export default MouseTracker
+export default useMousePositions
